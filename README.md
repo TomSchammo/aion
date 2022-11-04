@@ -1,5 +1,7 @@
 # aion
 
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
 Aion is a command line tool to set timers.
 
 It uses [notify-rust](https://github.com/hoodie/notify-rust) to send a dbus notification when
