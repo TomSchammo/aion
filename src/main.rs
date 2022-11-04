@@ -88,6 +88,8 @@ fn display_notification(time: &str, icon: Option<&str>) {
         .summary("Time's up!")
         .body(format!("Your timer of {} has eneded!", time).as_str())
         .icon(icon)
+        .appname("aion")
+        .timeout(0)
         .show()
         .unwrap();
 }
