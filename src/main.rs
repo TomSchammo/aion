@@ -1,3 +1,5 @@
+use std::{thread, time};
+
 use clap::Parser;
 use notify_rust::Notification;
 
@@ -92,4 +94,9 @@ fn display_notification(time: &str, icon: Option<&str>) {
 
 fn main() {
     let args = Args::parse();
+
+    let time = parse_time(&args.time);
+    thread::sleep(time::Duration::from_secs(time));
+
+    display_notification(args.time.as_str(), None);
 }
