@@ -109,6 +109,8 @@ fn display_notification(time: &str, icon: Option<&str>) {
         .unwrap();
 }
 
+/// Parses time and runs timer.
+/// Displays notification after time has elapsed.
 pub fn run_timer(time: &str) {
     let parsed_time = parse_time(time);
     thread::sleep(time::Duration::from_secs(parsed_time));
