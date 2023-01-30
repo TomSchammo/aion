@@ -26,7 +26,7 @@ fn display_notification(time: &str, icon: Option<&str>) {
 
     Notification::new()
         .summary("Time's up!")
-        .body(format!("Your timer of {} has eneded!", time).as_str())
+        .body(format!("Your timer of {} has ended!", time).as_str())
         .icon(icon)
         .appname("aion")
         .timeout(0)

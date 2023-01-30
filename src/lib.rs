@@ -62,7 +62,7 @@ pub fn parse_time(time: &str) -> u64 {
 }
 
 /// Prepare daemon by creating files for stdout and stderr
-/// as well as creating an configuring a `Daemonzie` object.
+/// as well as creating an configuring a `Daemonize` object.
 pub fn prepare_daemon() -> Daemonize<()> {
     let exec_name = std::env::current_exe()
         .expect("Can't get the exec path")
