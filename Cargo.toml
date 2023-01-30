@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.0.18", features = ["derive"] }
+daemonize = "0.4.1"
 notify-rust = { version = "4.5.10", default-features = false, features = ["d", "images"] }
