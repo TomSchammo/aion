@@ -8,6 +8,13 @@ use notify_rust::Notification;
 struct Args {
     #[clap(short = 's', long = "set", help = "TBA")]
     time: String,
+    #[clap(
+        short = 'i',
+        long = "interactive",
+        takes_value = false,
+        help = "Keeps aion in the foreground\nTBA: cli"
+    )]
+    interactive: bool,
 }
 
 /// Sends a notification to the dbus that the specified time has elapsed.
@@ -39,17 +46,23 @@ fn main() {
 
     let daemon = aion::prepare_daemon();
 
-    match daemon.start() {
-        Ok(_) => {
-            println!("Successfully started daemon!");
+    if args.interactive {
+        let time = aion::parse_time(&args.time);
+        thread::sleep(time::Duration::from_secs(time));
+        display_notification(args.time.as_str(), None);
+    } else {
+        match daemon.start() {
+            Ok(_) => {
+                println!("Successfully started daemon!");
 
-            let time = aion::parse_time(&args.time);
-            thread::sleep(time::Duration::from_secs(time));
-            display_notification(args.time.as_str(), None);
-        }
-        Err(e) => {
-            eprintln!("Error when starting deamon!");
-            eprintln!("{e}");
+                let time = aion::parse_time(&args.time);
+                thread::sleep(time::Duration::from_secs(time));
+                display_notification(args.time.as_str(), None);
+            }
+            Err(e) => {
+                eprintln!("Error when starting deamon!");
+                eprintln!("{e}");
+            }
         }
     }
 }
