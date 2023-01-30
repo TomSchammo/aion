@@ -1,8 +1,9 @@
 use daemonize::Daemonize;
-use std::fs::File;
+use notify_rust::Notification;
+use std::{fs::File, thread, time};
 
 /// format: <a>d<b>h<c>m<e>s, where a,b,c,e are numbers
-pub fn parse_time(time: &str) -> u64 {
+fn parse_time(time: &str) -> u64 {
     // total seconds
     let mut seconds: u64 = 0;
 
@@ -82,4 +83,34 @@ pub fn prepare_daemon() -> Daemonize<()> {
         .stdout(stdout)
         .stderr(stderr)
         .exit_action(|| println!("Executed before master process exits"))
+}
+
+/// Sends a notification to the dbus that the specified time has elapsed.
+///
+/// Optionally an icon can be provided. If not the 'alarm-timer' icon
+/// will be used as a fallback.
+fn display_notification(time: &str, icon: Option<&str>) {
+    let icon: &str = if let Some(icon) = icon {
+        icon
+    } else {
+        "alarm-timer"
+    };
+
+    #[cfg(debug_assertions)]
+    println!("Using icon: {}", icon);
+
+    Notification::new()
+        .summary("Time's up!")
+        .body(format!("Your timer of {} has ended!", time).as_str())
+        .icon(icon)
+        .appname("aion")
+        .timeout(0)
+        .show()
+        .unwrap();
+}
+
+pub fn run_timer(time: &str) {
+    let parsed_time = parse_time(time);
+    thread::sleep(time::Duration::from_secs(parsed_time));
+    display_notification(time, None);
 }
