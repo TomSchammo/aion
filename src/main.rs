@@ -37,8 +37,19 @@ fn display_notification(time: &str, icon: Option<&str>) {
 fn main() {
     let args = Args::parse();
 
-    let time = aion::parse_time(&args.time);
-    thread::sleep(time::Duration::from_secs(time));
+    let daemon = aion::prepare_daemon();
 
-    display_notification(args.time.as_str(), None);
+    match daemon.start() {
+        Ok(_) => {
+            println!("Successfully started daemon!");
+
+            let time = aion::parse_time(&args.time);
+            thread::sleep(time::Duration::from_secs(time));
+            display_notification(args.time.as_str(), None);
+        }
+        Err(e) => {
+            eprintln!("Error when starting deamon!");
+            eprintln!("{e}");
+        }
+    }
 }

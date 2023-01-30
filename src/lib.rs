@@ -1,3 +1,6 @@
+use daemonize::Daemonize;
+use std::fs::File;
+
 /// format: <a>d<b>h<c>m<e>s, where a,b,c,e are numbers
 pub fn parse_time(time: &str) -> u64 {
     // total seconds
@@ -56,4 +59,27 @@ pub fn parse_time(time: &str) -> u64 {
     }
 
     seconds
+}
+
+/// Prepare daemon by creating files for stdout and stderr
+/// as well as creating an configuring a `Daemonzie` object.
+pub fn prepare_daemon() -> Daemonize<()> {
+    let exec_name = std::env::current_exe()
+        .expect("Can't get the exec path")
+        .file_name()
+        .expect("Can't get the exec name")
+        .to_string_lossy()
+        .into_owned();
+
+    let path_base = format!("/tmp/{exec_name}");
+
+    let stdout = File::create(format!("{path_base}.out")).unwrap();
+    let stderr = File::create(format!("{path_base}.err")).unwrap();
+
+    Daemonize::new()
+        .pid_file(format!("{path_base}.pid"))
+        .umask(0o077)
+        .stdout(stdout)
+        .stderr(stderr)
+        .exit_action(|| println!("Executed before master process exits"))
 }
