@@ -6,7 +6,7 @@ use notify_rust::Notification;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about=None)]
 struct Args {
-    #[clap(short, long, help = "TBA")]
+    #[clap(short = 's', long = "set", help = "TBA")]
     time: String,
 }
 
